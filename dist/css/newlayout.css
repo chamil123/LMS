@@ -1,0 +1,43 @@
+body{
+    margin: 0px;
+    
+}
+div#newmain{
+    width: 100%;
+    
+}
+div#newheader{
+        height: 75px;
+        background-color: #367FA9;    
+}
+div#newcontent{
+    min-height: 600px;    
+}
+div#newsidebar{
+    width: 18%;
+    float: left;
+    background-color: #222d32;
+    min-height: inherit;
+    
+}
+div#subcontent{
+    width: 82%; float: right;
+}
+#leftheader{width: 60%; color: #FFF; font-size: 24px; 
+            float: left; text-transform:uppercase; font-weight: bold; 
+            padding-left: 5%; padding-top: 10px;}
+
+#rightheader{width: 39%; color: #FFF; font-size: 14px; float: right;
+                padding-right: 20px; padding-top: 15px;
+        text-align: right}
+
+a{color: #fff}
+
+.pa{padding-left: 10px}
+
+.list1{list-style-type: none; padding:10px;}
+
+
+
+
+

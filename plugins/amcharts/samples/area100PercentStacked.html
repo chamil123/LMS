@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>amCharts examples</title>
+        <!--<link rel="stylesheet" href="style.css" type="text/css">-->
+        <!--<script src="../amcharts/amcharts.js" type="text/javascript"></script>-->
+        <script src="../amcharts/serial.js" type="text/javascript"></script>
+        <script>
+            var chart;
+            var chartData = [
+            ];
+
+            chartData.push({
+                "year": "1995",
+                "cars": 1,
+                "motorcycles": 683
+            },
+            {
+                "year": "1996",
+                "cars": 20,
+                "motorcycles": 691
+            },
+            {
+                "year": "1998",
+                "cars": 50,
+                "motorcycles": 891
+            })
+            var chartData = [
+                {
+                    "year": "1995",
+                    "cars": 1,
+                    "motorcycles": 683
+                },
+                {
+                    "year": "1996",
+                    "cars": 20,
+                    "motorcycles": 691
+                }
+            ];
+
+            AmCharts.ready(function () {
+                // SERIAL CHART
+                chart = new AmCharts.AmSerialChart();
+
+                chart.dataProvider = chartData;
+                chart.categoryField = "year";
+
+                chart.addTitle("Traffic incidents per year", 15);
+
+                // AXES
+                // Category
+                var categoryAxis = chart.categoryAxis;
+                categoryAxis.gridAlpha = 0.07;
+                categoryAxis.axisColor = "#DADADA";
+                categoryAxis.startOnAxis = true;
+
+                // Value
+                var valueAxis = new AmCharts.ValueAxis();
+                valueAxis.title = "percent"; // this line makes the chart "stacked"
+                valueAxis.stackType = "100%";
+                valueAxis.gridAlpha = 0.07;
+                chart.addValueAxis(valueAxis);
+
+                // GRAPHS
+                // first graph
+                var graph = new AmCharts.AmGraph();
+                graph.type = "line"; // it's simple line graph
+                graph.title = "Cars";
+                graph.valueField = "cars";
+                graph.lineAlpha = 0;
+                graph.fillAlphas = 0.6; // setting fillAlphas to > 0 value makes it area graph
+                graph.balloonText = "<img src='images/car.png' style='vertical-align:bottom; margin-right: 10px; width:28px; height:21px;'><span style='font-size:14px; color:#000000;'><b>[[value]]</b></span>";
+                chart.addGraph(graph);
+
+                // second graph
+                graph = new AmCharts.AmGraph();
+                graph.type = "line";
+                graph.title = "Motorcycles";
+                graph.valueField = "motorcycles";
+                graph.lineAlpha = 0;
+                graph.fillAlphas = 0.6;
+                graph.balloonText = "<img src='images/motorcycle.png' style='vertical-align:bottom; margin-right: 10px; width:28px; height:21px;'><span style='font-size:14px; color:#000000;'><b>[[value]]</b></span>";
+                chart.addGraph(graph);
+
+                // third graph
+                graph = new AmCharts.AmGraph();
+                graph.type = "line";
+                graph.title = "Bicycles";
+                graph.valueField = "bicycles";
+                graph.lineAlpha = 0;
+                graph.fillAlphas = 0.6;
+                graph.balloonText = "<img src='images/bicycle.png' style='vertical-align:bottom; margin-right: 10px; width:28px; height:21px;'><span style='font-size:14px; color:#000000;'><b>[[value]]</b></span>";
+                chart.addGraph(graph);
+
+                // LEGEND
+                var legend = new AmCharts.AmLegend();
+                legend.align = "center";
+                legend.valueText = "[[value]] ([[percents]]%)";
+                legend.valueWidth = 100;
+                legend.valueAlign = "left";
+                legend.equalWidths = false;
+                legend.periodValueText = "total: [[value.sum]]"; // this is displayed when mouse is not over the chart.
+                chart.addLegend(legend);
+
+                // CURSOR
+                var chartCursor = new AmCharts.ChartCursor();
+                chartCursor.zoomable = false; // as the chart displayes not too many values, we disabled zooming
+                chartCursor.cursorAlpha = 0;
+                chartCursor.valueZoomable = true;
+                chartCursor.pan = true;
+                chart.addChartCursor(chartCursor);
+
+                //  VALUE SCROLLBAR
+                chart.valueScrollbar = new AmCharts.ChartScrollbar();
+
+                // WRITE
+                chart.write("chartdiv");
+            });
+        </script>
+    </head>
+
+    <body>
+        <div id="chartdiv" style="width:100%; height:400px;"></div>
+    </body>
+
+</html>
