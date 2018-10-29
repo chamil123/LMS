@@ -42,6 +42,7 @@ if (isset($_POST['AddMember'])) {
         $member_mobile = $_POST['member_mobile'];
         $member_homenumber = $_POST['member_homenumber'];
         $centerid = $_POST['centerid'];
+        $branchid = $_POST['branch_id'];
 
         $guranter_nic = $_POST['guranter_nic'];
         $guranter_surname = $_POST['guranter_surname'];
@@ -59,13 +60,18 @@ if (isset($_POST['AddMember'])) {
             $row = mysqli_fetch_assoc($resultGroup);
             $group_id = $row['group_id'];
         }
+        if ($group_id == '') {
+            $group_id = $group->addGroup($member_group, $centerid, $branchid);
+        }
+
+
 
 //        echo 'member_number : '.$member_number."<br/> member_nic : ". $member_nic."<br/> member_surname : ". $member_surname."<br/> member_initial : ". $member_initial."<br/> member_fullInitial : ". $member_fullInitial."<br/> member_dob : ". $member_dob."<br/> member_status : ". $member_status."<br/> member_gender : ". $member_gender."<br/> member_nationality : ".$member_nationality."<br/> member_group : ".$member_group."<br/> member_mobile : ".$member_mobile."<br/> member_homenumber : ".$member_homenumber."<br/> centerid : ".$centerid."<br/> branch_code : ".$branch_code."<br/> member_aline1 : ".$member_aline1."<br/> member_aline2 : ". $member_aline2."<br/> member_aline3 : ". $member_aline3."<br/> member_aline4 : ".$member_aline4
 //                ."<br/> guranter_nic : ".$guranter_nic."<br/> guranter_surname : ". $guranter_surname."<br/> guranter_initial : ". $guranter_initial."<br/> guranter_fullInitial : ". $guranter_fullInitial."<br/> guranter_contact : ". $guranter_contact."<br/> guranter_dob : ". $guranter_dob."<br/> resultMember : ". $resultMember."<br/> guranter_addressln1 : ".$guranter_addressln1."<br/> guranter_addressln2 :  ". $guranter_addressln2."<br/> guranter_addressln3 : ".$guranter_addressln3."<br/> guranter_addressln4 : ".$guranter_addressln4;
         //$resultMAddress = $address->addAddress($member_aline1, $member_aline2, $member_aline3, $member_aline4);
-        $resultMember = $member->addMember($member_number, $member_nic, $member_surname, $member_initial, $member_fullInitial, $member_dob, $member_status, $member_gender, $member_nationality, $member_group, $member_mobile, $member_homenumber, $centerid, $branch_code, $member_aline1, $member_aline2, $member_aline3, $member_aline4);
+        $resultMember = $member->addMember($member_number, $member_nic, $member_surname, $member_initial, $member_fullInitial, $member_dob, $member_status, $member_gender, $member_nationality, $member_mobile, $member_homenumber, $centerid, $branch_code, $member_aline1, $member_aline2, $member_aline3, $member_aline4, $group_id);
 
-        echo " guranter_nic : " . $guranter_nic . "<br/> guranter_surname : " . $guranter_surname . "<br/> guranter_initial : " . $guranter_initial . "<br/> guranter_fullInitial : " . $guranter_fullInitial . "<br/> guranter_contact : " . $guranter_contact . "<br/> guranter_dob : " . $guranter_dob . "<br/> resultMember : " . $resultMember . "<br/> guranter_addressln1 : " . $guranter_addressln1 . "<br/> guranter_addressln2 :  " . $guranter_addressln2 . "<br/> guranter_addressln3 : " . $guranter_addressln3 . "<br/> guranter_addressln4 : " . $guranter_addressln4;
+        //  echo " guranter_nic : " . $guranter_nic . "<br/> guranter_surname : " . $guranter_surname . "<br/> guranter_initial : " . $guranter_initial . "<br/> guranter_fullInitial : " . $guranter_fullInitial . "<br/> guranter_contact : " . $guranter_contact . "<br/> guranter_dob : " . $guranter_dob . "<br/> resultMember : " . $resultMember . "<br/> guranter_addressln1 : " . $guranter_addressln1 . "<br/> guranter_addressln2 :  " . $guranter_addressln2 . "<br/> guranter_addressln3 : " . $guranter_addressln3 . "<br/> guranter_addressln4 : " . $guranter_addressln4;
         // $resultGAddress = $address->addAddress($guranter_addressln1, $guranter_addressln2, $guranter_addressln3, $guranter_addressln4);
         $resultGuranter = $guranter->addGuranter($guranter_nic, $guranter_surname, $guranter_initial, $guranter_fullInitial, $guranter_contact, $guranter_dob, $resultMember, $guranter_addressln1, $guranter_addressln2, $guranter_addressln3, $guranter_addressln4);
 
@@ -73,10 +79,12 @@ if (isset($_POST['AddMember'])) {
             $_SESSION['msgm'] = 1;
             $member->commit();
             $guranter->commit();
+            $group->commit();
             header("Location:../../AddMember.php");
         } else {
             $member->rollback();
             $guranter->rollback();
+            $group->rollback();
             $_SESSION['msgm'] = 5;
             header("Location:../../AddMember.php");
         }

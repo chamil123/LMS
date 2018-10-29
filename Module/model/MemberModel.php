@@ -11,7 +11,7 @@ class Member {
         return $Query;
     }
 
-    function addMember($member_number, $member_nic, $member_surname, $member_initial, $member_fullInitial, $member_dob, $member_status, $member_gender, $member_nationality, $member_group, $member_mobile, $member_homenumber, $centerid, $branch_code, $member_aline1, $member_aline2, $member_aline3, $member_aline4) {
+    function addMember($member_number, $member_nic, $member_surname, $member_initial, $member_fullInitial, $member_dob, $member_status, $member_gender, $member_nationality, $member_mobile, $member_homenumber, $centerid, $branch_code, $member_aline1, $member_aline2, $member_aline3, $member_aline4,$group_id) {
         global $con;
         mysqli_autocommit($con, FALSE);
         $result = $con->query("SELECT member_id FROM member ORDER BY member_id  DESC LIMIT 1");
@@ -26,8 +26,8 @@ class Member {
         $member_fullIni = ucwords($member_fullInitial);
 
         $sql = "INSERT INTO member (member_number,member_NIC,member_surNmae,member_inital,member_initialInFulWithoutSurname,member_dateOfBirth,member_maritalStatus,
-            member_gender,member_nationality,member_group,member_mobileNumber,member_homeNumber,center_id,member_branchNumber,member_status,member_AddressLine1,member_AddressLine2,member_AddressLine3,member_AddressLine4,member_code)VALUES (
-        '$member_number','$member_nic','$member_serNam','$member_initial','$member_fullIni','$member_dob','$member_status','$member_gender','$member_nationality','$member_group','$member_mobile','$member_homenumber',$centerid,'$branch_code','Active','$member_aline1', '$member_aline2', '$member_aline3', '$member_aline4','$num_str')";
+            member_gender,member_nationality,member_mobileNumber,member_homeNumber,center_id,member_branchNumber,member_status,member_AddressLine1,member_AddressLine2,member_AddressLine3,member_AddressLine4,member_code,group_id)VALUES (
+        '$member_number','$member_nic','$member_serNam','$member_initial','$member_fullIni','$member_dob','$member_status','$member_gender','$member_nationality','$member_mobile','$member_homenumber',$centerid,'$branch_code','Active','$member_aline1', '$member_aline2', '$member_aline3', '$member_aline4','$num_str',$group_id)";
         $Query = mysqli_query($con, $sql);
         if ($Query) {
             return $con->insert_id;

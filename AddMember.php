@@ -573,7 +573,7 @@ if ($_SESSION["BRANCH_CODE"] != "") {
                                             <label for="group" class="col-sm-3 control-label">Group</label>
                                             <div class="col-sm-9" id="member_group">
                                                 <div class="input-group dropdown">
-                                                    <input type="text" class="form-control countrycode dropdown-toggle" >
+                                                    <input type="text" name="member_group" id="member_group" class="form-control countrycode dropdown-toggle" autocomplete="off">
                                                     <ul class="dropdown-menu">
                                                        
                                                     </ul>

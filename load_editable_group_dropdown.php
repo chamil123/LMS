@@ -19,10 +19,10 @@ $result = $member->getAllMemberGroupByCenter($branch_id, $center_id);
     });
 </script>
 <div class="input-group dropdown">
-    <input type="text" class="form-control countrycode dropdown-toggle" >
+    <input type="text" name="member_group" id="member_group" class="form-control countrycode dropdown-toggle" autocomplete="off">
     <ul class="dropdown-menu">
         <?php while ($row = mysqli_fetch_assoc($result)) { ?>
-            <li><a href="#" data-value="<?= $row['group_number']; ?>"><?= $row['group_number']; ?></a></li>
+            <li><a  data-value="<?= $row['group_number']; ?>"><?= $row['group_number']; ?></a></li>
         <?php } ?>
     </ul>
     <span role="button" class="input-group-addon dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></span>
