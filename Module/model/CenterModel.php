@@ -27,7 +27,8 @@ class Center {
                         INNER JOIN
                     branch tb ON tc.branch_id = tb.branch_id
                 WHERE
-                    tc.center_status = 0 ORDER BY tb.branch_id DESC";
+                    tc.center_status = 0
+                ORDER BY tc.center_code DESC";
         $Query = mysqli_query($con, $sql);
         return $Query;
     }
@@ -91,9 +92,9 @@ class Center {
         $Query = mysqli_query($con, $sql);
         return $Query;
     }
-    function autocomplete($data) {
+    function autocomplete($data,$branch_id) {
         global $con;
-        $sql = "SELECT center_name,center_code,center_id FROM center WHERE center_name LIKE '$data%'";
+        $sql = "SELECT center_name,center_code,center_id FROM center WHERE center_name LIKE '$data%' AND branch_id=$branch_id";
         $query = mysqli_query($con, $sql);
         return $query;
     }

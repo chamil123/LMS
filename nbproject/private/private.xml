@@ -5,17 +5,22 @@
         <group>
             <file>file:/C:/wamp64NEW/www/LMS/ViewUsers.php</file>
             <file>file:/C:/wamp64NEW/www/LMS/AddCharges.php</file>
-            <file>file:/C:/wamp64NEW/www/LMS/includes/signOut.php</file>
+            <file>file:/C:/wamp64NEW/www/LMS/load_editable_group_dropdown.php</file>
+            <file>file:/C:/wamp64NEW/www/LMS/ViewCenters.php</file>
             <file>file:/C:/wamp64NEW/www/LMS/Module/model/MemberModel.php</file>
+            <file>file:/C:/wamp64NEW/www/LMS/Module/model/GroupModel.php</file>
             <file>file:/C:/wamp64NEW/www/LMS/ContractInquiry.php</file>
             <file>file:/C:/wamp64NEW/www/LMS/AddUser.php</file>
+            <file>file:/C:/wamp64NEW/www/LMS/getGuranterName.php</file>
+            <file>file:/C:/wamp64NEW/www/LMS/Module/controller/GroupController.php</file>
+            <file>file:/C:/wamp64NEW/www/LMS/Module/controller/MemberController.php</file>
             <file>file:/C:/wamp64NEW/www/LMS/Module/model/CenterModel.php</file>
+            <file>file:/C:/wamp64NEW/www/LMS/loadZoneNameauto.php</file>
             <file>file:/C:/wamp64NEW/www/LMS/CreateCenter.php</file>
-            <file>file:/C:/wamp64NEW/www/LMS/includes/topbar.php</file>
             <file>file:/C:/wamp64NEW/www/LMS/ArreasReport.php</file>
             <file>file:/C:/wamp64NEW/www/LMS/AddMember.php</file>
-            <file>file:/C:/wamp64NEW/www/LMS/includes/navbar.php</file>
             <file>file:/C:/wamp64NEW/www/LMS/getAllCenterAjax.php</file>
+            <file>file:/C:/wamp64NEW/www/LMS/getMemberName.php</file>
         </group>
     </open-files>
 </project-private>

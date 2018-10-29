@@ -184,7 +184,7 @@ $code_str = sprintf("%03d", $maxcode);
                                         <div class="form-group">
                                             <label for="center_number" class="col-sm-4 control-label">Center Code</label>
                                             <div class="col-sm-4">
-                                                <input type="text" class="form-control required" id="center_number" name="center_number" value="<?= $code_str ?>" placeholder="center code">
+                                                <input type="text" class="form-control required" id="center_number" name="center_number" value="<?= $code_str ?>" readonly placeholder="center code">
                                             </div>
                                         </div>
                                         <div class="form-group">

@@ -389,7 +389,7 @@ if ($_SESSION["BRANCH_CODE"] != "") {
             $.noConflict();
 
             jQuery(document).ready(function () {
-                jQuery("#zone").autocomplete("loadZoneNameauto.php", {
+                jQuery("#zone").autocomplete("loadZoneNameauto.php?branch_id="+$("#branch_id").val(), {
                     width: 375,
                     matchContains: true,
                     selectFirst: true
