@@ -10,7 +10,7 @@
  * Revision: $Id: jquery.autocomplete.js 15 2009-08-22 10:30:27Z joern.zaefferer $
  */
 
-(function($) {
+;(function($) {
 	
 $.fn.extend({
 	autocomplete: function(urlOrData, options) {
@@ -18,8 +18,8 @@ $.fn.extend({
 		options = $.extend({}, $.Autocompleter.defaults, {
 			url: isUrl ? urlOrData : null,
 			data: isUrl ? null : urlOrData,
-			delay: isUrl ? $.Autocompleter.defaults.delay : 100,
-			max: options && !options.scroll ? 100 : 150
+			delay: isUrl ? $.Autocompleter.defaults.delay : 10,
+			max: options && !options.scroll ? 10 : 150
 		}, options);
 		
 		// if highlight is set to false, replace it with a do-nothing function
@@ -77,9 +77,15 @@ $.Autocompleter = function(input, options) {
 	};
 	var select = $.Autocompleter.Select(options, input, selectCurrent, config);
 	
-//	var blockSubmit;
+	var blockSubmit;
 	
-
+	// prevent form submit in opera when selecting with return key
+	$.browser.opera && $(input.form).bind("submit.autocomplete", function() {
+		if (blockSubmit) {
+			blockSubmit = false;
+			return false;
+		}
+	});
 	
 	// only opera doesn't trigger keydown multiple times while pressed, others don't work with keypress at all
 	$input.bind(($.browser.opera ? "keypress" : "keydown") + ".autocomplete", function(event) {

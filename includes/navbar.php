@@ -5,6 +5,8 @@ if (!isset($_SESSION)) {
 $branch_Id = $_SESSION["BRANCH_ID"];
 
 ?>
+<!--<script src="../dist/js/jquery-1.8.3.min.js" type="text/javascript"></script>-->
+                <!--<script src="../dist/js/app.min.js"></script>-->
 <aside class="main-sidebar">
     <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">

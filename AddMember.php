@@ -25,53 +25,57 @@ if ($_SESSION["BRANCH_CODE"] != "") {
         <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
         <link rel="stylesheet" href="dist/css/VikumTA.min.css">
         <link rel="stylesheet" href="dist/css/_all-skins.min.css">
+
         <link href="dist/css/Style.css" rel="stylesheet" type="text/css"/>
-        <link href="dist/css/jquery.autocomplete.css" rel="stylesheet" type="text/css"/>
+
+        <script src="dist/js/jquery.js" type="text/javascript"></script>
+        <script src="dist/js/app.min.js"></script>
+        <script src="dist/js/jquery_1.js" type="text/javascript"></script>
         <script src="dist/js/jquery.autocomplete.js" type="text/javascript"></script>
-        <script src="dist/js/jquery-1.8.3.min.js" type="text/javascript"></script>
-        <!--<script src="dist/js/jQuery-2.1.4.min.js" type="text/javascript"></script>-->
         <script src="dist/js/MemberValidate.js" type="text/javascript"></script>
-        <!--<link href="dist/css/jquery-ui.css" rel="stylesheet" type="text/css"/>-->
-        <!--<script src="dist/js/jquery-ui.js" type="text/javascript"></script>-->
         <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
-         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <link href="dist/css/jquery.autocomplete_1.css" rel="stylesheet" type="text/css"/>
+
+        <script src="dist/js/datePicker/jquery-ui.js"></script>
+
+        <link href="dist/js/datePicker/jquery-ui.css" rel="stylesheet" type="text/css"/>
+
         <script>
             $(function () {
-                $("#member_dob").datepicker({
-                    changeMonth: true,
-                    changeYear: true,
-                    dateFormat: 'yy-mm-dd',
-                    yearRange: "-60:-18"
-                });
-                $("#guranter_dob").datepicker({
-                    changeMonth: true,
-                    changeYear: true,
-                    dateFormat: 'yy-mm-dd',
-                    yearRange: "-60:-18"
-                });
+                var dtToday = new Date();
+
+                var month = dtToday.getMonth() + 1;
+                var day = dtToday.getDate();
+                var year = dtToday.getFullYear();
+                if (month < 10)
+                    month = '0' + month.toString();
+                if (day < 10)
+                    day = '0' + day.toString();
+
+                var maxDate = year - 18 + '-' + month + '-' + day;
+                var minDate = year - 60 + '-' + month + '-' + day;
+                $('#member_dob').attr('max', maxDate);
+                $('#member_dob').attr('min', minDate);
+                $('#guranter_dob').attr('max', maxDate);
+                $('#guranter_dob').attr('min', minDate);
             });
+        </script>
+        <script>
+
             function setValueToBranchCode() {
                 var branch = document.getElementById('member_br').value;
 
                 var branch_code = branch.replace('SR', '');
                 document.getElementById('branch_code').value = branch_code;
             }
-             function loaoItem(num) {
-                  alert("sdsd");
-                    $("#zone").autocomplete("get_all_members.php", {
-                        ?width: 340,
-                        matchContains: true,
-                        selectFirst: false
-                    });
-                    $("#zone").result(function (event, data, formatted) {
-                      
-//                        $("#zone").val(data[0]);
-       
-                      
-                    });
-                }
+
         </script>
         <script>
+            $(document).on("ready", function () {
+                loadData();
+            });
+
             function showUserName(str)
             {
                 // alert("sasas");
@@ -101,21 +105,21 @@ if ($_SESSION["BRANCH_CODE"] != "") {
                 xmlhttp.open("GET", "getMemberName.php?uname=" + branchNum + "/" + centerNum + "/" + str, true);
                 xmlhttp.send();
             }
-            
-                function showGuranterName(str)
+
+            function showGuranterName(str)
             {
-                
+
                 var xmlhttp;
                 if (str == "")
                 {
-                      
+
                     document.getElementById("txtHintG").innerHTML = "";
-                  
+
                     return;
                 }
                 if (window.XMLHttpRequest)
                 {// code for IE7+, Firefox, Chrome, Opera, Safari
-                
+
                     xmlhttp = new XMLHttpRequest();
                 } else
                 {// code for IE6, IE5
@@ -132,7 +136,7 @@ if ($_SESSION["BRANCH_CODE"] != "") {
 //                var branchNum = document.getElementById("member_br").value;
 //                var centerNum = document.getElementById("centerNumber").value;
                 // xmlhttp.open("GET", "getUserName.php?q=" + str, true);
-                 xmlhttp.open("GET", "getGuranterName.php?guranter="+ str, true);
+                xmlhttp.open("GET", "getGuranterName.php?guranter=" + str, true);
                 xmlhttp.send();
             }
 
@@ -148,9 +152,7 @@ if ($_SESSION["BRANCH_CODE"] != "") {
             ];
             var AddressLine4 = [
             ];
-            $(document).on("ready", function () {
-                loadData();
-            });
+
             var loadData = function () {
 
                 $.ajax({
@@ -228,72 +230,72 @@ if ($_SESSION["BRANCH_CODE"] != "") {
                     }
                 });
             }
-            $(document).ready(function () {
-                $("#member_center").autocomplete({source: Center, select: function (event, ui) {
-                        event.preventDefault();
-                        $(this).val(ui.item.label);
-                        $("#centerNumber").val(ui.item.name);
-                        $("#centerid").val(ui.item.id);
-                    }});
-            });
-/////////////////// for member address details////////////////////////////////////
-            $(document).ready(function () {
-                $("#member_aline1").autocomplete({source: Address, select: function (event, ui) {
-                        event.preventDefault();
-                        $(this).val(ui.item.label);
-                        $("#member_aline2").val(ui.item.member_AddressLine2);
-                        $("#member_aline3").val(ui.item.member_AddressLine3);
-                        $("#member_aline4").val(ui.item.member_AddressLine4);
-
-                    }});
-            });
-            $(document).ready(function () {
-                $("#member_aline2").autocomplete({source: AddressLine2, select: function (event, ui) {
-                        event.preventDefault();
-                        $(this).val(ui.item.label);
-                    }});
-            });
-            $(document).ready(function () {
-                $("#member_aline3").autocomplete({source: AddressLine3, select: function (event, ui) {
-                        event.preventDefault();
-                        $(this).val(ui.item.label);
-                    }});
-            });
-            $(document).ready(function () {
-                $("#member_aline4").autocomplete({source: AddressLine4, select: function (event, ui) {
-                        event.preventDefault();
-                        $(this).val(ui.item.label);
-                    }});
-            });
+//            $(document).ready(function () {
+//                $("#member_center").autocomplete({source: Center, select: function (event, ui) {
+//                        event.preventDefault();
+//                        $(this).val(ui.item.label);
+//                        $("#centerNumber").val(ui.item.name);
+//                        $("#centerid").val(ui.item.id);
+//                    }});
+//            });
+///////////////////// for member address details////////////////////////////////////
+//            $(document).ready(function () {
+//                $("#member_aline1").autocomplete({source: Address, select: function (event, ui) {
+//                        event.preventDefault();
+//                        $(this).val(ui.item.label);
+//                        $("#member_aline2").val(ui.item.member_AddressLine2);
+//                        $("#member_aline3").val(ui.item.member_AddressLine3);
+//                        $("#member_aline4").val(ui.item.member_AddressLine4);
+//
+//                    }});
+//            });
+//            $(document).ready(function () {
+//                $("#member_aline2").autocomplete({source: AddressLine2, select: function (event, ui) {
+//                        event.preventDefault();
+//                        $(this).val(ui.item.label);
+//                    }});
+//            });
+//            $(document).ready(function () {
+//                $("#member_aline3").autocomplete({source: AddressLine3, select: function (event, ui) {
+//                        event.preventDefault();
+//                        $(this).val(ui.item.label);
+//                    }});
+//            });
+//            $(document).ready(function () {
+//                $("#member_aline4").autocomplete({source: AddressLine4, select: function (event, ui) {
+//                        event.preventDefault();
+//                        $(this).val(ui.item.label);
+//                    }});
+//            });
 ///////////////// for guranter address details////////////////////////////////////
-            $(document).ready(function () {
-                $("#guranter_addressln1").autocomplete({source: Address, select: function (event, ui) {
-                        event.preventDefault();
-                        $(this).val(ui.item.label);
-                        $("#guranter_addressln2").val(ui.item.member_AddressLine2);
-                        $("#guranter_addressln3").val(ui.item.member_AddressLine3);
-                        $("#guranter_addressln4").val(ui.item.member_AddressLine4);
-
-                    }});
-            });
-            $(document).ready(function () {
-                $("#guranter_addressln2").autocomplete({source: AddressLine2, select: function (event, ui) {
-                        event.preventDefault();
-                        $(this).val(ui.item.label);
-                    }});
-            });
-            $(document).ready(function () {
-                $("#guranter_addressln3").autocomplete({source: AddressLine3, select: function (event, ui) {
-                        event.preventDefault();
-                        $(this).val(ui.item.label);
-                    }});
-            });
-            $(document).ready(function () {
-                $("#guranter_addressln4").autocomplete({source: AddressLine4, select: function (event, ui) {
-                        event.preventDefault();
-                        $(this).val(ui.item.label);
-                    }});
-            });
+//            $(document).ready(function () {
+//                $("#guranter_addressln1").autocomplete({source: Address, select: function (event, ui) {
+//                        event.preventDefault();
+//                        $(this).val(ui.item.label);
+//                        $("#guranter_addressln2").val(ui.item.member_AddressLine2);
+//                        $("#guranter_addressln3").val(ui.item.member_AddressLine3);
+//                        $("#guranter_addressln4").val(ui.item.member_AddressLine4);
+//
+//                    }});
+//            });
+//            $(document).ready(function () {
+//                $("#guranter_addressln2").autocomplete({source: AddressLine2, select: function (event, ui) {
+//                        event.preventDefault();
+//                        $(this).val(ui.item.label);
+//                    }});
+//            });
+//            $(document).ready(function () {
+//                $("#guranter_addressln3").autocomplete({source: AddressLine3, select: function (event, ui) {
+//                        event.preventDefault();
+//                        $(this).val(ui.item.label);
+//                    }});
+//            });
+//            $(document).ready(function () {
+//                $("#guranter_addressln4").autocomplete({source: AddressLine4, select: function (event, ui) {
+//                        event.preventDefault();
+//                        $(this).val(ui.item.label);
+//                    }});
+//            });
 
 
         </script>
@@ -305,11 +307,10 @@ if ($_SESSION["BRANCH_CODE"] != "") {
                 var result = "<?php echo $_SESSION['msgm'] ?>";
 
                 if (result == 1) {
-                     // swal("Good job!", "You clicked the button!", "success");
+                    // swal("Good job!", "You clicked the button!", "success");
                     swal("Successfully inserted!", "You clicked the button!", "success");
-                   // $('.success').fadeIn(700).delay(1500).fadeOut(200);
-                }
-                else if (result == 2) {
+                    // $('.success').fadeIn(700).delay(1500).fadeOut(200);
+                } else if (result == 2) {
                     $('.failure').fadeIn(700).delay(1500).fadeOut(200);
                     $('.failure').html('Successfully deleted record');
                 } else if (result == 3) {
@@ -331,6 +332,40 @@ if ($_SESSION["BRANCH_CODE"] != "") {
                 });
             });
         </script>
+        <script>
+//          jQuery.noConflict();
+// $.noConflict();
+            $.noConflict();
+
+            jQuery(document).ready(function () {
+                jQuery("#zone").autocomplete("loadZoneNameauto.php", {
+                    width: 375,
+                    matchContains: true,
+                    selectFirst: true
+                });
+                jQuery("#zone").result(function (event, data, formatted) {
+//                        $("#zone").val(data[0]);
+                    var data = data + "";
+                    var string = data.split(" ");
+                    jQuery("#centerNumber").val(string[1]);
+                });
+            });
+
+            $(function () {
+                $("#member_dob").datepicker({
+                    changeMonth: true,
+                    changeYear: true,
+                    dateFormat: 'yy-mm-dd',
+                    yearRange: "-60:-18"
+                });
+//                $("#guranter_dob").datepicker({
+//                    changeMonth: true,
+//                    changeYear: true,
+//                    dateFormat: 'yy-mm-dd',
+//                    yearRange: "-60:-18"
+//                });
+            });
+        </script>
         <div class="wrapper">
             <div style="height: 50px" >
                 <header class="main-header effect" >
@@ -347,6 +382,7 @@ if ($_SESSION["BRANCH_CODE"] != "") {
                 </header>
             </div>
             <?php include 'includes/navbar.php'; ?>
+
             <div class="content-wrapper">
 
                 <!-- Content Header (Page header) -->
@@ -377,13 +413,13 @@ if ($_SESSION["BRANCH_CODE"] != "") {
                                         <div class="form-group">
                                             <label for="center" class="col-sm-3 control-label">Center</label>
                                             <div class="col-sm-9">
-                                                <input type="text" class="form-control required" id="zone" name="zone"  onfocus="loaoItem('1');" placeholder="Please Enter Center Name">
+                                                <input type="text" class="form-control required" id="zone" name="zone"   placeholder="Please Enter Center Name">
 <!--                                                <select class="form-control required" id="empID" name="member_center">
                                                     <option value="" >-----select an option-----</option>
                                                 <?php
                                                 while ($row = mysqli_fetch_assoc($result)) {
                                                     ?>
-                                                                                                                <option value="<?= $row['center_id'] ?>" ><?= $row['center_name'] ?></option>
+                                                                                                                                                    <option value="<?= $row['center_id'] ?>" ><?= $row['center_name'] ?></option>
                                                     <?php
                                                 }
                                                 ?>
@@ -438,10 +474,11 @@ if ($_SESSION["BRANCH_CODE"] != "") {
                                                 <textarea class="form-control required" rows="3" name="member_fullInitial" id="member_fullInitial" placeholder="Enter ..." autocomplete="off"></textarea>
                                             </div>
                                         </div>
+
                                         <div class="form-group">
                                             <label for="surname" class="col-sm-3 control-label">Date of Birth</label>
                                             <div class="col-sm-9">
-                                                <input type="text" class="form-control required" id="member_dob" name="member_dob">
+                                                <input type="date" class="form-control required" id="member_dob" name="member_dob">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -544,7 +581,7 @@ if ($_SESSION["BRANCH_CODE"] != "") {
                                     <form class="form-horizontal">
                                         <div class="box-body">
                                             <div class="form-group">
-                                                
+
                                                 <label for="nic" class="col-sm-3 control-label">NIC Number</label>
                                                 <div class="col-sm-9">
                                                     <span id="txtHintG"></span>
@@ -573,7 +610,7 @@ if ($_SESSION["BRANCH_CODE"] != "") {
                                             <div class="form-group">
                                                 <label for="surname" class="col-sm-3 control-label">Date of Birth</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control required" id="guranter_dob" name="guranter_dob">
+                                                    <input type="date" class="form-control required" id="guranter_dob" name="guranter_dob">
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -622,9 +659,7 @@ if ($_SESSION["BRANCH_CODE"] != "") {
             </div>
             <?php include 'includes/footer.php'; ?>
         </div>
-        <script src="dist/js/jQuery-2.1.4.min.js" type="text/javascript"></script>
         <script src="bootstrap/js/bootstrap.min.js"></script>
-        <script src="dist/js/app.min.js"></script>
         <link href="dist/js/datePicker/jquery-ui.css" rel="stylesheet" type="text/css"/>
         <script src="dist/js/datePicker/jquery-ui.js"></script>
     </body>

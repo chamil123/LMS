@@ -91,6 +91,12 @@ class Center {
         $Query = mysqli_query($con, $sql);
         return $Query;
     }
+    function autocomplete($data) {
+        global $con;
+        $sql = "SELECT center_name,center_code FROM center WHERE center_name LIKE '$data%'";
+        $query = mysqli_query($con, $sql);
+        return $query;
+    }
 
 }
 

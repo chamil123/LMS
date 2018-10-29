@@ -33,12 +33,12 @@ if ($_SESSION["BRANCH_CODE"] != "") {
         <link href="dist/css/Style.css" rel="stylesheet" type="text/css"/>
 
 
-        <script src="dist/js/jquery-1.8.3.min.js" type="text/javascript"></script>
-        <script src="dist/js/jQuery-2.1.4.min.js" type="text/javascript"></script>
+<!--        <script src="dist/js/jquery-1.8.3.min.js" type="text/javascript"></script>
+        <script src="dist/js/jQuery-2.1.4.min.js" type="text/javascript"></script>-->
         <script src="dist/js/UserValidate.js" type="text/javascript"></script>
 
-        <link href="dist/css/jquery-ui.css" rel="stylesheet" type="text/css"/>
-        <script src="dist/js/jquery-ui.js" type="text/javascript"></script>
+        <!--<link href="dist/css/jquery-ui.css" rel="stylesheet" type="text/css"/>-->
+        <!--<script src="dist/js/jquery-ui.js" type="text/javascript"></script>-->
 
         <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
         <script>

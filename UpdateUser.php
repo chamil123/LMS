@@ -255,11 +255,7 @@ if ($_SESSION["BRANCH_CODE"] != "") {
                                             <div class="col-sm-9">
                                                 <select  name="rol_id" id="role_id" class="form-control required">
                                                     <option value="">-----Plese select role----</option>
-                                                    
-                                                        
-
                                                     <?php while ($row = mysqli_fetch_array($resultRole)) { ?>
-
                                                         <option value="<?php echo $row['role_id']; ?>"
                                                         <?php
                                                         if ($row['role_id'] == $rowResult['role_id']) {

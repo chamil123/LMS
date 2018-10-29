@@ -52,11 +52,11 @@ if (isset($_POST['AddMember'])) {
         $guranter_addressln3 = $_POST['guranter_addressln3'];
         $guranter_addressln4 = $_POST['guranter_addressln4'];
         
-//        echo $member_aline1."<br/>".$member_aline2."<br/>".$member_aline3."<br/>".$member_cityid."<br/>".$branch_code."<br/>".$member_br."<br/>".$member_no."<br/>".$centerNumber."<br/>".$member_number."<br/>".
-//                
-//                $member_nic."<br/>".$member_surname."<br/>".$member_initial."<br/>".$member_fullInitial."<br/>".$member_dob."<br/>".$member_status."<br/>".$member_gender."<br/>".$member_nationality."<br/>".$member_group."<br/>".
-//                $member_mobile."<br/>".$member_homenumber."<br/>".$centerid."<br/>".$guranter_nic."<br/>".$guranter_surname."<br/>".$guranter_initial."<br/>".$guranter_fullInitial."<br/>".$guranter_contact."<br/>".
-//                $guranter_dob."<br/>".$guranter_addressln1."<br/>".$guranter_addressln2."<br/>".$guranter_addressln3."<br/>".$gurantor_cityid;
+        echo 'member_aline1 : '.$member_aline1."<br/> member_aline2 : ".$member_aline2."<br/> member_aline3 : ".$member_aline3."<br/>  member_cityid : ".$member_cityid."<br/> branch_code : ".$branch_code."<br/> member_br : ".$member_br."<br/> member_no : ".$member_no."<br/> centerNumber : ".$centerNumber."<br/> member_number : ".$member_number."<br/> member_nic : ".
+                
+                $member_nic."<br/> member_surname : ".$member_surname."<br/> member_initial : ".$member_initial."<br/> member_fullInitial : ".$member_fullInitial."<br/> member_dob : ".$member_dob."<br/> member_status : ".$member_status."<br/> member_gender : ".$member_gender."<br/> member_nationality : ".$member_nationality."<br/> member_group : ".$member_group."<br/> guranter_dob : ".
+                $member_mobile."<br/>".$member_homenumber."<br/>".$centerid."<br/>".$guranter_nic."<br/>".$guranter_surname."<br/>".$guranter_initial."<br/>".$guranter_fullInitial."<br/>".$guranter_contact."<br/>".
+                $guranter_dob."<br/> guranter_addressln1 : ".$guranter_addressln1."<br/> guranter_addressln2 : ".$guranter_addressln2."<br/> guranter_addressln3 : ".$guranter_addressln3."<br/>  gurantor_cityid : ".$gurantor_cityid;
        
         //$resultMAddress = $address->addAddress($member_aline1, $member_aline2, $member_aline3, $member_aline4);
         $resultMember = $member->addMember($member_number, $member_nic, $member_surname, $member_initial, $member_fullInitial, $member_dob, $member_status, $member_gender, $member_nationality, $member_group, $member_mobile, $member_homenumber, $centerid, $branch_code,$member_aline1, $member_aline2, $member_aline3, $member_aline4);
@@ -66,7 +66,7 @@ if (isset($_POST['AddMember'])) {
         if ($resultMember > 0) {
             $_SESSION['msgm'] = 1;
         }
-        header("Location:../../AddMember.php");
+//        header("Location:../../AddMember.php");
     }
 }
 if (isset($_POST['UpdateMember'])) {
