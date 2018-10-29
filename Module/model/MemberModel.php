@@ -175,9 +175,15 @@ class Member {
 
         $data = mysqli_fetch_array($Query);
         return $data[0];
-    } function getAllMemberGroupByCenter($branch_id) {
+    } function getAllMemberGroupByCenter($branch_id,$center_id) {
         global $con;
-        $sql = "SELECT*FROM rights_has_user INNER JOIN rights ON rights_has_user.rights_id=rights.rights_id WHERE rights_has_user.user_id=$user_id";
+        $sql = "SELECT 
+                    tg.group_number, tg.group_id
+                FROM
+                    member_group tg
+                WHERE
+                    tg.branch_id = $branch_id AND tg.center_id = $center_id
+                        AND tg.group_status = 0";
         $Query = mysqli_query($con, $sql);
         return $Query;
     }

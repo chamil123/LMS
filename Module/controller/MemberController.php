@@ -9,6 +9,8 @@ require '../model/AddressModel.php';
 $address = new Address();
 require '../model/GuranterModel.php';
 $guranter = new Guranter();
+require '../model/GroupModel.php';
+$group = new Group();
 
 $action = $_GET['action'];
 if (isset($_POST['AddMember'])) {
@@ -52,6 +54,12 @@ if (isset($_POST['AddMember'])) {
         $guranter_addressln3 = $_POST['guranter_addressln3'];
         $guranter_addressln4 = $_POST['guranter_addressln4'];
 
+        $resultGroup = $group->seachGroupByNo($member_group);
+        if ($resultGroup != null) {
+            $row = mysqli_fetch_assoc($resultGroup);
+            $group_id = $row['group_id'];
+        }
+
 //        echo 'member_number : '.$member_number."<br/> member_nic : ". $member_nic."<br/> member_surname : ". $member_surname."<br/> member_initial : ". $member_initial."<br/> member_fullInitial : ". $member_fullInitial."<br/> member_dob : ". $member_dob."<br/> member_status : ". $member_status."<br/> member_gender : ". $member_gender."<br/> member_nationality : ".$member_nationality."<br/> member_group : ".$member_group."<br/> member_mobile : ".$member_mobile."<br/> member_homenumber : ".$member_homenumber."<br/> centerid : ".$centerid."<br/> branch_code : ".$branch_code."<br/> member_aline1 : ".$member_aline1."<br/> member_aline2 : ". $member_aline2."<br/> member_aline3 : ". $member_aline3."<br/> member_aline4 : ".$member_aline4
 //                ."<br/> guranter_nic : ".$guranter_nic."<br/> guranter_surname : ". $guranter_surname."<br/> guranter_initial : ". $guranter_initial."<br/> guranter_fullInitial : ". $guranter_fullInitial."<br/> guranter_contact : ". $guranter_contact."<br/> guranter_dob : ". $guranter_dob."<br/> resultMember : ". $resultMember."<br/> guranter_addressln1 : ".$guranter_addressln1."<br/> guranter_addressln2 :  ". $guranter_addressln2."<br/> guranter_addressln3 : ".$guranter_addressln3."<br/> guranter_addressln4 : ".$guranter_addressln4;
         //$resultMAddress = $address->addAddress($member_aline1, $member_aline2, $member_aline3, $member_aline4);
@@ -60,6 +68,7 @@ if (isset($_POST['AddMember'])) {
         echo " guranter_nic : " . $guranter_nic . "<br/> guranter_surname : " . $guranter_surname . "<br/> guranter_initial : " . $guranter_initial . "<br/> guranter_fullInitial : " . $guranter_fullInitial . "<br/> guranter_contact : " . $guranter_contact . "<br/> guranter_dob : " . $guranter_dob . "<br/> resultMember : " . $resultMember . "<br/> guranter_addressln1 : " . $guranter_addressln1 . "<br/> guranter_addressln2 :  " . $guranter_addressln2 . "<br/> guranter_addressln3 : " . $guranter_addressln3 . "<br/> guranter_addressln4 : " . $guranter_addressln4;
         // $resultGAddress = $address->addAddress($guranter_addressln1, $guranter_addressln2, $guranter_addressln3, $guranter_addressln4);
         $resultGuranter = $guranter->addGuranter($guranter_nic, $guranter_surname, $guranter_initial, $guranter_fullInitial, $guranter_contact, $guranter_dob, $resultMember, $guranter_addressln1, $guranter_addressln2, $guranter_addressln3, $guranter_addressln4);
+
         if ($resultMember > 0 && $resultGuranter > 0) {
             $_SESSION['msgm'] = 1;
             $member->commit();

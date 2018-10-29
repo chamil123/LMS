@@ -18,7 +18,7 @@ if ($_SESSION["BRANCH_CODE"] != "") {
     $maxcode = $member->getMaxmemberNo($branch_Id);
     $member_str = sprintf("%03d", $maxcode);
 
-    $member->getAllMemberGroupByCenter($branch_Id);
+//    $member->getAllMemberGroupByCenter($branch_Id);
 } else {
     $member_branchCode = "";
 }
@@ -52,6 +52,7 @@ if ($_SESSION["BRANCH_CODE"] != "") {
         <script>
             $(function () {
                 $('.dropdown-menu a').click(function () {
+                    alert($(this).attr('data-value'));
                     $(this).closest('.dropdown').find('input.countrycode')
                             .val($(this).attr('data-value'));
                 });
@@ -490,9 +491,9 @@ if ($_SESSION["BRANCH_CODE"] != "") {
                                             </div>
                                             <div class="col-sm-3">
                                                 <input type="text" class="form-control required" id="centerNumber" name="centerNumber" placeholder="Center No">
-                                                <input type="text" class="form-control " id="centerid" name="centerid" >
-                                                <input type="text" class="form-control " id="branch_code" name="branch_code" value="<?= $branch_code ?>">
-                                                <input type="text" class="form-control " id="branch_id" name="branch_id" value="<?php echo  $_SESSION["BRANCH_ID"];?>">
+                                                <input type="hidden" class="form-control " id="centerid" name="centerid" >
+                                                <input type="hidden" class="form-control " id="branch_code" name="branch_code" value="<?= $branch_code ?>">
+                                                <input type="hidden" class="form-control " id="branch_id" name="branch_id" value="<?php echo  $_SESSION["BRANCH_ID"];?>">
                                             </div>
                                             <div class="col-sm-3">
                                                 <input type="text" class="form-control required" id="member_no" name="member_no" value="<?= $member_str; ?>"  placeholder="Member No">
@@ -574,9 +575,7 @@ if ($_SESSION["BRANCH_CODE"] != "") {
                                                 <div class="input-group dropdown">
                                                     <input type="text" class="form-control countrycode dropdown-toggle" >
                                                     <ul class="dropdown-menu">
-                                                        <li><a value="asasas" data-value="+47">Norway (+47)</a></li>
-                                                        <li><a href="#" data-value="+1">USA (+1)</a></li>
-                                                        <li><a href="#" data-value="+55">Japan (+55)</a></li>
+                                                       
                                                     </ul>
                                                     <span role="button" class="input-group-addon dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></span>
                                                 </div>
