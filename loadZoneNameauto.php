@@ -10,7 +10,7 @@ $my_data = mysqli_real_escape_string($con, $q);
 $result=$auto->autocomplete($my_data);
 if ($result) {
     while ($row = mysqli_fetch_row($result)) {
-        echo $row[0]." ".$row[1]."\n";
+        echo $row[0]." ".$row[1]." ".$row[2]."\n";
     }
 }
 ?>

@@ -3,7 +3,6 @@ if (!isset($_SESSION)) {
     session_start();
 }
 $branch_Id = $_SESSION["BRANCH_ID"];
-
 ?>
 <!--<script src="../dist/js/jquery-1.8.3.min.js" type="text/javascript"></script>-->
                 <!--<script src="../dist/js/app.min.js"></script>-->
@@ -45,7 +44,7 @@ $branch_Id = $_SESSION["BRANCH_ID"];
                         ?>
 
                         <li><a href="CreateCenter.php"><i class="far fa-circle"></i> Create Center</a></li>
-                        <?php } ?>
+                    <?php } ?>
                     <li><a href="ViewCenters.php"><i class="far fa-circle"></i> View Centers</a></li>
                 </ul>
             </li>
@@ -56,7 +55,11 @@ $branch_Id = $_SESSION["BRANCH_ID"];
                     <span class="label label-primary pull-right"></span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="AddMember.php"><i class="far fa-circle"></i> Add member</a></li>
+                    <?php
+                    if ($branch_Id != "") {
+                        ?>
+                        <li><a href="AddMember.php"><i class="far fa-circle"></i> Add member</a></li>
+                    <?php } ?>
                     <li><a href="ViewMembers.php"><i class="far fa-circle"></i> View Members</a></li>
                 </ul>
             </li>

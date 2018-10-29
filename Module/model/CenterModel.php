@@ -93,7 +93,7 @@ class Center {
     }
     function autocomplete($data) {
         global $con;
-        $sql = "SELECT center_name,center_code FROM center WHERE center_name LIKE '$data%'";
+        $sql = "SELECT center_name,center_code,center_id FROM center WHERE center_name LIKE '$data%'";
         $query = mysqli_query($con, $sql);
         return $query;
     }

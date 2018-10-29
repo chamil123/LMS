@@ -13,6 +13,7 @@ class Member {
 
     function addMember($member_number, $member_nic, $member_surname, $member_initial, $member_fullInitial, $member_dob, $member_status, $member_gender, $member_nationality, $member_group, $member_mobile, $member_homenumber, $centerid, $branch_code, $member_aline1, $member_aline2, $member_aline3, $member_aline4) {
         global $con;
+        mysqli_autocommit($con, FALSE);
         $result = $con->query("SELECT member_id FROM member ORDER BY member_id  DESC LIMIT 1");
         $id;
         while ($row = $result->fetch_assoc()) {
@@ -21,9 +22,9 @@ class Member {
         $id++;
         $num_str = sprintf("%010d", $id);
 
-        $member_serNam=ucwords($member_surname);
-        $member_fullIni=ucwords($member_fullInitial);
-        
+        $member_serNam = ucwords($member_surname);
+        $member_fullIni = ucwords($member_fullInitial);
+
         $sql = "INSERT INTO member (member_number,member_NIC,member_surNmae,member_inital,member_initialInFulWithoutSurname,member_dateOfBirth,member_maritalStatus,
             member_gender,member_nationality,member_group,member_mobileNumber,member_homeNumber,center_id,member_branchNumber,member_status,member_AddressLine1,member_AddressLine2,member_AddressLine3,member_AddressLine4,member_code)VALUES (
         '$member_number','$member_nic','$member_serNam','$member_initial','$member_fullIni','$member_dob','$member_status','$member_gender','$member_nationality','$member_group','$member_mobile','$member_homenumber',$centerid,'$branch_code','Active','$member_aline1', '$member_aline2', '$member_aline3', '$member_aline4','$num_str')";
@@ -121,35 +122,74 @@ class Member {
         $Query = mysqli_query($con, $sql);
         return $Query;
     }
-     function serchByCenter($serchBox) {
+
+    function serchByCenter($serchBox) {
         global $con;
         $sql = "SELECT * from member INNER JOIN branch ON member.member_branchNumber=branch.branch_code INNER JOIN center ON member.center_id=center.center_id INNER JOIN application ON member.member_id=application.member_id WHERE application.application_status='activated' AND member.center_id=$serchBox ORDER BY member_group  DESC";
         $Query = mysqli_query($con, $sql);
         return $Query;
     }
-    function serchByMemberNum($serchBox){
-         global $con;
+
+    function serchByMemberNum($serchBox) {
+        global $con;
         $sql = "SELECT * from member INNER JOIN branch ON member.member_branchNumber=branch.branch_code INNER JOIN center ON member.center_id=center.center_id INNER JOIN application ON member.member_id=application.member_id WHERE application.application_status='activated' AND member.member_number='$serchBox' ORDER BY member_group  DESC";
         $Query = mysqli_query($con, $sql);
         return $Query;
-    }function serchByNicNum($serchBox){
-         global $con;
+    }
+
+    function serchByNicNum($serchBox) {
+        global $con;
         $sql = "SELECT * from member INNER JOIN branch ON member.member_branchNumber=branch.branch_code INNER JOIN center ON member.center_id=center.center_id INNER JOIN application ON member.member_id=application.member_id WHERE application.application_status='activated' AND member.member_NIC='$serchBox' ORDER BY member_group  DESC";
         $Query = mysqli_query($con, $sql);
         return $Query;
-    }function serchByAppID($serchBox){
-         global $con;
+    }
+
+    function serchByAppID($serchBox) {
+        global $con;
         $sql = "SELECT * from member INNER JOIN branch ON member.member_branchNumber=branch.branch_code INNER JOIN center ON member.center_id=center.center_id INNER JOIN application ON member.member_id=application.member_id WHERE application_status='activated' AND application.application_id='$serchBox' ORDER BY member_group  DESC";
         $Query = mysqli_query($con, $sql);
         return $Query;
     }
-    
-    function getPermission($user_id){
-         global $con; 
-        
+
+    function getPermission($user_id) {
+        global $con;
+
         $sql = "SELECT*FROM rights_has_user INNER JOIN rights ON rights_has_user.rights_id=rights.rights_id WHERE rights_has_user.user_id=$user_id";
         $Query = mysqli_query($con, $sql);
         return $Query;
+    }
+
+    function getMaxmemberNo($branch_Id) {
+        global $con;
+        $sql = "SELECT 
+                    IFNULL(MAX(tm.member_id + 1), 1) AS max_member_id
+                FROM
+                    member tm
+                        INNER JOIN
+                    center tc ON tm.center_id = tc.center_id
+                WHERE
+                    tc.branch_id = $branch_Id
+                        AND tm.member_status = 'Active'
+                        AND tc.center_status = 0";
+        $Query = mysqli_query($con, $sql);
+
+        $data = mysqli_fetch_array($Query);
+        return $data[0];
+    } function getAllMemberGroupByCenter($branch_id) {
+        global $con;
+        $sql = "SELECT*FROM rights_has_user INNER JOIN rights ON rights_has_user.rights_id=rights.rights_id WHERE rights_has_user.user_id=$user_id";
+        $Query = mysqli_query($con, $sql);
+        return $Query;
+    }
+
+    function commit() {
+        global $con;
+        $con->commit();
+    }
+
+    function rollback() {
+        global $con;
+        $con->rollback();
     }
 
 }

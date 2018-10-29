@@ -6,12 +6,19 @@ error_reporting(E_ERROR || E_WARNING);
 require './database/connection.php';
 include './Module/model/CenterModel.php';
 include './includes/session_handling.php';
+include './Module/model/MemberModel.php';
 $center = new Center();
+$member = new Member();
 $result = $center->viewAllCenters();
 if ($_SESSION["BRANCH_CODE"] != "") {
 
     $branch_code = $_SESSION["BRANCH_CODE"];
     $member_branchCode = "SR" . $branch_code;
+    $branch_Id = $_SESSION["BRANCH_ID"];
+    $maxcode = $member->getMaxmemberNo($branch_Id);
+    $member_str = sprintf("%03d", $maxcode);
+
+    $member->getAllMemberGroupByCenter($branch_Id);
 } else {
     $member_branchCode = "";
 }
@@ -29,6 +36,7 @@ if ($_SESSION["BRANCH_CODE"] != "") {
         <link href="dist/css/Style.css" rel="stylesheet" type="text/css"/>
 
         <script src="dist/js/jquery.js" type="text/javascript"></script>
+        <script src="bootstrap/js/bootstrap.min.js"></script>
         <script src="dist/js/app.min.js"></script>
         <script src="dist/js/jquery_1.js" type="text/javascript"></script>
         <script src="dist/js/jquery.autocomplete.js" type="text/javascript"></script>
@@ -42,6 +50,13 @@ if ($_SESSION["BRANCH_CODE"] != "") {
         <link href="dist/js/datePicker/jquery-ui.css" rel="stylesheet" type="text/css"/>
 
         <script>
+            $(function () {
+                $('.dropdown-menu a').click(function () {
+                    $(this).closest('.dropdown').find('input.countrycode')
+                            .val($(this).attr('data-value'));
+                });
+            });
+
             $(function () {
                 var dtToday = new Date();
 
@@ -72,6 +87,7 @@ if ($_SESSION["BRANCH_CODE"] != "") {
 
         </script>
         <script>
+
             $(document).on("ready", function () {
                 loadData();
             });
@@ -91,6 +107,7 @@ if ($_SESSION["BRANCH_CODE"] != "") {
                 } else
                 {// code for IE6, IE5
                     xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                    guranter_contact
                 }
                 xmlhttp.onreadystatechange = function ()
                 {
@@ -99,27 +116,23 @@ if ($_SESSION["BRANCH_CODE"] != "") {
                         document.getElementById("txtHint").innerHTML = xmlhttp.responseText;
                     }
                 }
-                var branchNum = document.getElementById("member_br").value;
-                var centerNum = document.getElementById("centerNumber").value;
+//                var branchNum = document.getElementById("member_br").value;
+//                var centerNum = document.getElementById("centerNumber").value;
                 // xmlhttp.open("GET", "getUserName.php?q=" + str, true);
-                xmlhttp.open("GET", "getMemberName.php?uname=" + branchNum + "/" + centerNum + "/" + str, true);
+                xmlhttp.open("GET", "getMemberName.php?uname=" + str, true);
                 xmlhttp.send();
             }
-
             function showGuranterName(str)
             {
 
                 var xmlhttp;
                 if (str == "")
                 {
-
                     document.getElementById("txtHintG").innerHTML = "";
-
                     return;
                 }
                 if (window.XMLHttpRequest)
                 {// code for IE7+, Firefox, Chrome, Opera, Safari
-
                     xmlhttp = new XMLHttpRequest();
                 } else
                 {// code for IE6, IE5
@@ -129,8 +142,43 @@ if ($_SESSION["BRANCH_CODE"] != "") {
                 {
                     if (xmlhttp.readyState == 4 && xmlhttp.status == 200)
                     {
+                        var pro = JSON.parse(xmlhttp.responseText);
+                        if (pro != '') {
+                            document.getElementById("txtHintG").innerHTML = "<i class='alert-danger'>Existing Guranter NIC number</i>";
+                            for (var i in pro) {
+                                guranter_NIC = pro[i].guranter_NIC;
+                                guranter_surName = pro[i].guranter_surName;
+                                guranter_initial = pro[i].guranter_initial;
+                                guranter_initialInFulWithoutSurname = pro[i].guranter_initialInFulWithoutSurname;
+                                guranter_dateOfBirth = pro[i].guranter_dateOfBirth;
+                                guranter_contact = pro[i].guranter_contact;
+                                guranter_AddressLine1 = pro[i].guranter_AddressLine1;
+                                guranter_AddressLine2 = pro[i].guranter_AddressLine2;
+                                guranter_AddressLine3 = pro[i].guranter_AddressLine3;
+                                guranter_AddressLine4 = pro[i].guranter_AddressLine4;
+                            }
 
-                        document.getElementById("txtHintG").innerHTML = xmlhttp.responseText;
+                            document.getElementById("guranter_surname").value = guranter_surName;
+                            document.getElementById("guranter_surname").style.color = 'red';
+                            document.getElementById("guranter_initial").value = guranter_initial;
+                            document.getElementById("guranter_initial").style.color = 'red';
+                            document.getElementById("guranter_fullInitial").value = guranter_initialInFulWithoutSurname;
+                            document.getElementById("guranter_fullInitial").style.color = 'red';
+                            document.getElementById("guranter_dob").value = guranter_dateOfBirth;
+                            document.getElementById("guranter_dob").style.color = 'red';
+                            document.getElementById("guranter_contact").value = guranter_contact;
+                            document.getElementById("guranter_contact").style.color = 'red';
+                            document.getElementById("guranter_addressln1").value = guranter_AddressLine1;
+                            document.getElementById("guranter_addressln1").style.color = 'red';
+                            document.getElementById("guranter_addressln2").value = guranter_AddressLine2;
+                            document.getElementById("guranter_addressln2").style.color = 'red';
+                            document.getElementById("guranter_addressln3").value = guranter_AddressLine3;
+                            document.getElementById("guranter_addressln3").style.color = 'red';
+                            document.getElementById("guranter_addressln4").value = guranter_AddressLine4;
+                            document.getElementById("guranter_addressln4").style.color = 'red';
+                        } else {
+                            document.getElementById("txtHintG").innerHTML = "<i class='alert-success'>Availbale Guranter NIC number</i>";
+                        }
                     }
                 }
 //                var branchNum = document.getElementById("member_br").value;
@@ -316,21 +364,23 @@ if ($_SESSION["BRANCH_CODE"] != "") {
                 } else if (result == 3) {
                     $('.warning').fadeIn(700).delay(1500).fadeOut(200);
                     $('.warning').html('Successfully Updated record');
+                } else if (result == 5) {
+                    swal("Error!", "Could't Complete the request, process is Rollback", "error");
                 }
 <?php $_SESSION['msgm'] = "" ?>
 
 
             }
 
-            $(document).ready(function () {
-                $('#empID').change(function () {
-                    $.get('getCenterInfoAjax.php', {empId: $(this).val()}, function (data) {
-
-                        $("#centerNumber").val(data);
-                        $("#centerid").val(data);
-                    });
-                });
-            });
+//            $(document).ready(function () {
+//                $('#zone').change(function () {
+//                    $.get('getCenterInfoAjax.php', {empId: $(this).val()}, function (data) {
+//
+//                        $("#centerNumber").val(data);
+//                        $("#centerid").val(data);
+//                    });
+//                });
+//            });
         </script>
         <script>
 //          jQuery.noConflict();
@@ -348,6 +398,9 @@ if ($_SESSION["BRANCH_CODE"] != "") {
                     var data = data + "";
                     var string = data.split(" ");
                     jQuery("#centerNumber").val(string[1]);
+                    jQuery("#centerid").val(string[2]);
+                   jQuery("#member_group").load('load_editable_group_dropdown.php',{'branch_id':$('#branch_id').val(),'center_id':$('#centerid').val()});
+                     
                 });
             });
 
@@ -365,6 +418,7 @@ if ($_SESSION["BRANCH_CODE"] != "") {
 //                    yearRange: "-60:-18"
 //                });
             });
+
         </script>
         <div class="wrapper">
             <div style="height: 50px" >
@@ -419,12 +473,12 @@ if ($_SESSION["BRANCH_CODE"] != "") {
                                                 <?php
                                                 while ($row = mysqli_fetch_assoc($result)) {
                                                     ?>
-                                                                                                                                                    <option value="<?= $row['center_id'] ?>" ><?= $row['center_name'] ?></option>
+                                                                                                                                                                                                                <option value="<?= $row['center_id'] ?>" ><?= $row['center_name'] ?></option>
                                                     <?php
                                                 }
                                                 ?>
                                                 </select>-->
-                                                <span id="txtHint"></span>
+
                                             </div>
                                         </div>
 
@@ -432,27 +486,23 @@ if ($_SESSION["BRANCH_CODE"] != "") {
 
                                             <label for="mNumber"  class="col-sm-3 control-label">Member No</label>
                                             <div class="col-sm-3">
-
                                                 <input type="text" class="form-control required" id="member_br" name="member_br" onkeyup="setValueToBranchCode();" value="<?= $member_branchCode ?>" placeholder="SRxxx">
                                             </div>
-
                                             <div class="col-sm-3">
                                                 <input type="text" class="form-control required" id="centerNumber" name="centerNumber" placeholder="Center No">
-                                                <input type="hidden" class="form-control " id="centerid" name="centerid" >
-                                                <input type="hidden" class="form-control " id="branch_code" name="branch_code" value="<?= $branch_code ?>">
+                                                <input type="text" class="form-control " id="centerid" name="centerid" >
+                                                <input type="text" class="form-control " id="branch_code" name="branch_code" value="<?= $branch_code ?>">
+                                                <input type="text" class="form-control " id="branch_id" name="branch_id" value="<?php echo  $_SESSION["BRANCH_ID"];?>">
                                             </div>
                                             <div class="col-sm-3">
-
- <!--<span style="float: right" id="txtHint"></soan>-->
-                                                <input type="text" class="form-control required" id="member_no" name="member_no" onkeyup="showUserName(this.value)" placeholder="Member No">
+                                                <input type="text" class="form-control required" id="member_no" name="member_no" value="<?= $member_str; ?>"  placeholder="Member No">
                                             </div>
-
                                         </div>
-
                                         <div class="form-group">
                                             <label for="nic" class="col-sm-3 control-label">NIC Number</label>
                                             <div class="col-sm-9">
-                                                <input type="text" class="form-control required" id="member_nic" name="member_nic" placeholder="NIC number" autocomplete="off">
+                                                <span id="txtHint"></span>
+                                                <input type="text" class="form-control required" id="member_nic" name="member_nic" placeholder="NIC number" onkeyup="showUserName(this.value)" autocomplete="off">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -514,15 +564,23 @@ if ($_SESSION["BRANCH_CODE"] != "") {
                                                     <option>Muslim</option>
                                                     <option>
                                                         Christian</option>
-
                                                 </select>
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <label for="group" class="col-sm-3 control-label">Group</label>
-                                            <div class="col-sm-9">
-                                                <input type="text" class="form-control required" id="member_group" name="member_group" placeholder="Group number" autocomplete="off">
+                                            <div class="col-sm-9" id="member_group">
+                                                <div class="input-group dropdown">
+                                                    <input type="text" class="form-control countrycode dropdown-toggle" >
+                                                    <ul class="dropdown-menu">
+                                                        <li><a value="asasas" data-value="+47">Norway (+47)</a></li>
+                                                        <li><a href="#" data-value="+1">USA (+1)</a></li>
+                                                        <li><a href="#" data-value="+55">Japan (+55)</a></li>
+                                                    </ul>
+                                                    <span role="button" class="input-group-addon dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></span>
+                                                </div>
+                                                                                        <!--<input type="text" class="form-control required" id="member_group" name="member_group" placeholder="Group number" autocomplete="off">-->
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -659,9 +717,7 @@ if ($_SESSION["BRANCH_CODE"] != "") {
             </div>
             <?php include 'includes/footer.php'; ?>
         </div>
-        <script src="bootstrap/js/bootstrap.min.js"></script>
         <link href="dist/js/datePicker/jquery-ui.css" rel="stylesheet" type="text/css"/>
         <script src="dist/js/datePicker/jquery-ui.js"></script>
     </body>
-
 </html>
