@@ -9,6 +9,7 @@ $branch_code = $_SESSION["BRANCH_CODE"];
 $member_id = $_GET['member_id'];
 require_once 'database/connection.php';
 include 'Module/model/MemberModel.php';
+include './Module/model/GroupModel.php';
 $member = new Member();
 $resultMember = $member->viewMemberDetailsByIDinVIEW($member_id);
 $rowMember = mysqli_fetch_assoc($resultMember);
@@ -22,6 +23,8 @@ $rowGurantor = mysqli_fetch_assoc($resultGuranter);
 include './Module/model/CenterModel.php';
 $center = new Center();
 $result = $center->viewAllCenters();
+$group = new Group();
+$resultGroup = $group->viewAllBroupByCenter($rowMember['center_id']);
 ?>
 
 <!DOCTYPE html>
@@ -38,12 +41,12 @@ $result = $center->viewAllCenters();
 
         <script src="dist/js/jquery-1.8.3.min.js" type="text/javascript"></script>
         <script src="dist/js/jQuery-2.1.4.min.js" type="text/javascript"></script>
-        <script src="dist/js/UserValidate.js"></script>
+        <script src="dist/js/MemberValidate.js" type="text/javascript"></script>
 
         <link href="dist/css/jquery-ui.css" rel="stylesheet" type="text/css"/>
         <script src="dist/js/jquery-ui.js" type="text/javascript"></script>
 
-       <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+        <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
         <script>
             function readURL(input) {
                 if (input.files && input.files[0]) {
@@ -130,8 +133,7 @@ $result = $center->viewAllCenters();
 
                 if (result == 1) {
                     $('.success').fadeIn(1500).delay(1500).fadeOut(400);
-                }
-                else if (result == 2) {
+                } else if (result == 2) {
                     $('.failure').fadeIn(1500).delay(1500).fadeOut(400);
                     $('.failure').html('Successfully deleted record');
                 } else if (result == 3) {
@@ -161,7 +163,7 @@ $result = $center->viewAllCenters();
             <?php include 'includes/navbar.php'; ?>
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
-                 <section class="content-header">
+                <section class="content-header">
                     <h1>
                         Member Creation
                         <small>Update members</small>
@@ -172,7 +174,7 @@ $result = $center->viewAllCenters();
                         <li class="active">Update Members</li>
                     </ol>
                 </section>
-                
+
                 <div id="ss" class="alert-boxs  response-content " style="margin: 0px 15px 10px 15px"></div> 
                 <div class="alert alert-box success " style="margin: 0px 15px 10px 15px">Successfully added record</div>
                 <section class="content">
@@ -191,9 +193,6 @@ $result = $center->viewAllCenters();
 
                                                 <select class="form-control" id="empID" name="member_center">
                                                     <option value="" >-----select an option-----</option>
-
-
-
                                                     <?php while ($rows = mysqli_fetch_assoc($result)) { ?>
                                                         <option value="<?php echo $rows['center_id'] ?>"
                                                         <?php
@@ -204,8 +203,6 @@ $result = $center->viewAllCenters();
                                                                     <?php echo $rows['center_name'] ?>
                                                         </option>     
                                                     <?php } ?>
-
-
                                                 </select>
                                             </div>
 
@@ -230,26 +227,26 @@ $result = $center->viewAllCenters();
                                         <div class="form-group">
                                             <label for="nic" class="col-sm-3 control-label">NIC Number</label>
                                             <div class="col-sm-9">
-                                                <input type="text" class="form-control" id="member_nic" name="member_nic"  value="<?php echo $rowMember['member_NIC']; ?>">
+                                                <input type="text" class="form-control required" id="member_nic" name="member_nic"  value="<?php echo $rowMember['member_NIC']; ?>"  autocomplete="off">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="surname" class="col-sm-3 control-label">Surname</label>
                                             <div class="col-sm-9">
-                                                <input type="text" class="form-control" id="member_surname" name="member_surname" value="<?php echo $rowMember['member_surNmae']; ?>">
+                                                <input type="text" class="form-control" id="member_surname" name="member_surname" value="<?php echo $rowMember['member_surNmae']; ?>" autocomplete="off">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="initial" class="col-sm-3 control-label">Initial</label>
                                             <div class="col-sm-9">
-                                                <input type="text" class="form-control" id="member_initial" name="member_initial" value="<?php echo $rowMember['member_inital']; ?>">
+                                                <input type="text" class="form-control" id="member_initial" name="member_initial" value="<?php echo $rowMember['member_inital']; ?>" autocomplete="off">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="inputPassword3" class="col-sm-3 control-label" style="padding-top: 0px;">Initial full without surname</label>
 
                                             <div class="col-sm-9">
-                                                <textarea class="form-control" rows="3" name="member_fullInitial" id="member_fullInitial"><?php echo $rowMember['member_initialInFulWithoutSurname']; ?></textarea>
+                                                <textarea class="form-control" rows="3" name="member_fullInitial" id="member_fullInitial"  autocomplete="off"><?php echo $rowMember['member_initialInFulWithoutSurname']; ?></textarea>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -261,8 +258,8 @@ $result = $center->viewAllCenters();
                                         <div class="form-group">
                                             <label for="dob" class="col-sm-3 control-label">Marital Status</label>
                                             <div class="col-sm-9">
-                                                <select class="form-control" id="member_status" name="member_status">
-                                                    <option>----------please select an option---------</option>
+                                                <select class="form-control required" id="member_status" name="member_status">
+                                                    <option value="">----------please select an option---------</option>
                                                     <option value="Sigle"<?php if ($rowMember['member_maritalStatus'] == 'Sigle') echo ' selected="selected"'; ?>>Sigle</option>
                                                     <option value="Married"<?php if ($rowMember['member_maritalStatus'] == 'Married') echo ' selected="selected"'; ?>>Married</option>
 
@@ -292,8 +289,8 @@ $result = $center->viewAllCenters();
                                         <div class="form-group">
                                             <label for="surname" class="col-sm-3 control-label">Nationality</label>
                                             <div class="col-sm-9">
-                                                <select class="form-control" id="member_nationality" name="member_nationality">
-                                                    <option>----------please select an option---------</option>
+                                                <select class="form-control required" id="member_nationality" name="member_nationality">
+                                                    <option value="">----------please select an option---------</option>
                                                     <option value="Sinhala"<?php if ($rowMember['member_nationality'] == 'Sinhala') echo ' selected="selected"'; ?>>Sinhala</option>
                                                     <option value="Tamil"<?php if ($rowMember['member_nationality'] == 'Tamil') echo ' selected="selected"'; ?>>Tamil</option>
                                                     <option value="Muslim"<?php if ($rowMember['member_nationality'] == 'Muslim') echo ' selected="selected"'; ?>>Muslim</option>
@@ -306,19 +303,31 @@ $result = $center->viewAllCenters();
                                         <div class="form-group">
                                             <label for="group" class="col-sm-3 control-label">Group</label>
                                             <div class="col-sm-9">
-                                                <input type="text" class="form-control" id="member_group" name="member_group" value="<?php echo $rowMember['member_group']; ?>">
+                                                <select class="form-control" id="member_group" name="member_group">
+                                                    <option value="" >-----select an option-----</option>
+                                                    <?php while ($rowg = mysqli_fetch_assoc($resultGroup)) { ?>
+                                                        <option value="<?php echo $rowg['group_id'] ?>"
+                                                        <?php
+                                                        if ($rowg['group_id'] == $rowMember['group_id']) {
+                                                            echo "selected";
+                                                        }
+                                                        ?>>
+                                                                    <?php echo $rowg['group_number'] ?>
+                                                        </option>     
+                                                    <?php } ?>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="nic" class="col-sm-3 control-label">Mobile Number</label>
                                             <div class="col-sm-9">
-                                                <input type="text" class="form-control" id="member_mobile" name="member_mobile" value="<?php echo $rowMember['member_mobileNumber']; ?>">
+                                                <input type="text" class="form-control" id="member_mobile" name="member_mobile" value="<?php echo $rowMember['member_mobileNumber']; ?>"  autocomplete="off">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="surname" class="col-sm-3 control-label">Home Number</label>
                                             <div class="col-sm-9">
-                                                <input type="text" class="form-control" id="member_homenumber" name="member_homenumber" value="<?php echo $rowMember['member_homeNumber']; ?>">
+                                                <input type="text" class="form-control" id="member_homenumber" name="member_homenumber" value="<?php echo $rowMember['member_homeNumber']; ?>"  autocomplete="off">
                                             </div>
                                         </div>
                                     </div>
@@ -334,26 +343,26 @@ $result = $center->viewAllCenters();
                                         <div class="form-group">
                                             <label for="initial" class="col-sm-3 control-label">Address Line 1</label>
                                             <div class="col-sm-9">
-                                                <input type="text" class="form-control" id="member_aline1" name="member_aline1" value="<?php echo $rowMember['member_AddressLine1']; ?>">
+                                                <input type="text" class="form-control" id="member_aline1" name="member_aline1" value="<?php echo $rowMember['member_AddressLine1']; ?>"  autocomplete="off">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="initial" class="col-sm-3 control-label"> Line 2</label>
                                             <div class="col-sm-9">
-                                                <input type="text" class="form-control" id="member_aline2" name="member_aline2" value="<?php echo $rowMember['member_AddressLine2']; ?>">
+                                                <input type="text" class="form-control" id="member_aline2" name="member_aline2" value="<?php echo $rowMember['member_AddressLine2']; ?>" autocomplete="off">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="initial" class="col-sm-3 control-label"> Line 3</label>
                                             <div class="col-sm-9">
-                                                <input type="text" class="form-control" id="member_aline3" name="member_aline3" value="<?php echo $rowMember['member_AddressLine3']; ?>">
+                                                <input type="text" class="form-control" id="member_aline3" name="member_aline3" value="<?php echo $rowMember['member_AddressLine3']; ?>" autocomplete="off">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="initial" class="col-sm-3 control-label"> Line 4</label>
                                             <div class="col-sm-9">
-                                                <input type="text" class="form-control" id="member_aline4" name="member_aline4" value="<?php echo $rowMember['member_AddressLine4']; ?>">
-                                                
+                                                <input type="text" class="form-control" id="member_aline4" name="member_aline4" value="<?php echo $rowMember['member_AddressLine4']; ?>" autocomplete="off">
+
                                             </div>
                                         </div>
                                     </div>
@@ -369,27 +378,27 @@ $result = $center->viewAllCenters();
                                         <div class="form-group">
                                             <label for="nic" class="col-sm-3 control-label">NIC Number</label>
                                             <div class="col-sm-9">
-                                                <input type="text" class="form-control" id="guranter_nic" name="guranter_nic" value="<?php echo $rowGurantor['guranter_NIC']; ?>">
+                                                <input type="text" class="form-control" id="guranter_nic" name="guranter_nic" value="<?php echo $rowGurantor['guranter_NIC']; ?>"  autocomplete="off">
                                                 <input type="text" class="form-control hidden" id="guranter_id" name="guranter_id" value="<?php echo $rowGurantor['guranter_id']; ?>">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="surname" class="col-sm-3 control-label">Surname</label>
                                             <div class="col-sm-9">
-                                                <input type="text" class="form-control" id="guranter_surname" name="guranter_surname" value="<?php echo $rowGurantor['guranter_surName']; ?>">
+                                                <input type="text" class="form-control" id="guranter_surname" name="guranter_surname" value="<?php echo $rowGurantor['guranter_surName']; ?>"  autocomplete="off">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="initial" class="col-sm-3 control-label">Initial</label>
                                             <div class="col-sm-9">
-                                                <input type="text" class="form-control" id="guranter_initial" name="guranter_initial" value="<?php echo $rowGurantor['guranter_initial']; ?>">
+                                                <input type="text" class="form-control" id="guranter_initial" name="guranter_initial" value="<?php echo $rowGurantor['guranter_initial']; ?>" autocomplete="off">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="inputPassword3" class="col-sm-3 control-label" style="padding-top: 0px;">Initial full without surname</label>
 
                                             <div class="col-sm-9">
-                                                <textarea class="form-control" rows="2" placeholder="Enter ..." id="guranter_fullInitial" name="guranter_fullInitial"><?php echo $rowGurantor['guranter_initialInFulWithoutSurname']; ?></textarea>
+                                                <textarea class="form-control" rows="2" placeholder="Enter ..." id="guranter_fullInitial" name="guranter_fullInitial"  autocomplete="off"><?php echo $rowGurantor['guranter_initialInFulWithoutSurname']; ?></textarea>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -401,33 +410,33 @@ $result = $center->viewAllCenters();
                                         <div class="form-group">
                                             <label for="initial" class="col-sm-3 control-label">Contact Number</label>
                                             <div class="col-sm-9">
-                                                <input type="text" class="form-control" id="guranter_contact" name="guranter_contact" value="<?php echo $rowGurantor['guranter_contact']; ?>">
+                                                <input type="text" class="form-control" id="guranter_contact" name="guranter_contact" value="<?php echo $rowGurantor['guranter_contact']; ?>" autocomplete="off">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="initial" class="col-sm-3 control-label">Address Line 1</label>
                                             <div class="col-sm-9">
-                                                <input type="text" class="form-control" id="guranter_addressln1" name="guranter_addressln1" value="<?php echo $rowGurantor['guranter_AddressLine1']; ?>">
+                                                <input type="text" class="form-control" id="guranter_addressln1" name="guranter_addressln1" value="<?php echo $rowGurantor['guranter_AddressLine1']; ?>" autocomplete="off">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="initial" class="col-sm-3 control-label"> Line 2</label>
                                             <div class="col-sm-9">
-                                                <input type="text" class="form-control" id="guranter_addressln2" name="guranter_addressln2" value="<?php echo $rowGurantor['guranter_AddressLine2']; ?>">
+                                                <input type="text" class="form-control" id="guranter_addressln2" name="guranter_addressln2" value="<?php echo $rowGurantor['guranter_AddressLine2']; ?>" autocomplete="off">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="initial" class="col-sm-3 control-label"> Line 3</label>
                                             <div class="col-sm-9">
-                                                <input type="text" class="form-control" id="guranter_addressln3" name="guranter_addressln3" value="<?php echo $rowGurantor['guranter_AddressLine3']; ?>">
+                                                <input type="text" class="form-control" id="guranter_addressln3" name="guranter_addressln3" value="<?php echo $rowGurantor['guranter_AddressLine3']; ?>" autocomplete="off">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="initial" class="col-sm-3 control-label"> Line 4</label>
                                             <div class="col-sm-9">
 
-                                                <input type="text" class="form-control" id="guranter_addressln4" name="guranter_addressln4" value="<?php echo $rowGurantor['guranter_AddressLine4']; ?>">
-                                              
+                                                <input type="text" class="form-control" id="guranter_addressln4" name="guranter_addressln4" value="<?php echo $rowGurantor['guranter_AddressLine4']; ?>" autocomplete="off">
+
                                             </div>
 
 

@@ -2,10 +2,10 @@
 
 //echo 'sdasdas';
 include './database/connection.php';
-$branch_id=$_GET['branch_id'];
+$center_id=$_GET['nic_number'];
 global $con;
-if($branch_id!=null){
-$sql = "SELECT 
+if($center_id!=null){
+ $sql = "SELECT 
                 *
             FROM
                 member
@@ -16,22 +16,24 @@ $sql = "SELECT
                     INNER JOIN
                 branch ON center.branch_id = branch.branch_id
             WHERE
-                branch.branch_id = $branch_id
+                member.member_NIC = '$center_id'
                     AND member.member_status = 'Active'";    
-}else{
-    $sql = "SELECT 
-                *
-            FROM
-                member
-                    INNER JOIN
-                guranter ON member.member_id = guranter.member_id
-                    INNER JOIN
-                center ON member.center_id = center.center_id
-                    INNER JOIN
-                branch ON center.branch_id = branch.branch_id
-            WHERE
-                member.member_status = 'Active' ";    
 }
+
+//else{
+//    $sql = "SELECT 
+//                *
+//            FROM
+//                member
+//                    INNER JOIN
+//                guranter ON member.member_id = guranter.member_id
+//                    INNER JOIN
+//                center ON member.center_id = center.center_id
+//                    INNER JOIN
+//                branch ON center.branch_id = branch.branch_id
+//            WHERE
+//                member.member_status = 'Active' ";    
+//}
 
 $result = mysqli_query($con, $sql);
 //var_dump($_REQUEST);

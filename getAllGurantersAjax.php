@@ -2,7 +2,7 @@
 $groupNumber=$_GET['group_id'];
 include './database/connection.php';
 global $con;
-$sql = "SELECT * FROM member WHERE member_group='$groupNumber'";
+$sql = "SELECT * FROM member WHERE group_id='$groupNumber'";
 $result = mysqli_query($con, $sql);
 
 $array_curency = array();

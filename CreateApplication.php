@@ -5,7 +5,8 @@ if (!isset($_SESSION)) {
 error_reporting(E_ERROR || E_WARNING);
 require './database/connection.php';
 include './includes/session_handling.php';
-$branch_id=$_SESSION["BRANCH_CODE"];
+$branch_id = $_SESSION["BRANCH_CODE"];
+echo 'dsfsd : ' . $_SESSION["BRANCH_ID"];
 ?>
 
 <!DOCTYPE html>
@@ -17,19 +18,45 @@ $branch_id=$_SESSION["BRANCH_CODE"];
         <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
         <link rel="stylesheet" href="dist/css/VikumTA.min.css">
         <link rel="stylesheet" href="dist/css/_all-skins.min.css">
-        <link href="dist/css/Style.css" rel="stylesheet" type="text/css"/>
+
         <link href="dist/css/Style.css" rel="stylesheet" type="text/css"/>
 
-        <script src="dist/js/jQuery-2.1.4.min.js" type="text/javascript"></script>
+
+        <script src="dist/js/jquery.js" type="text/javascript"></script>
+        <script src="bootstrap/js/bootstrap.min.js"></script>
+        <script src="dist/js/app.min.js"></script>
+
+
+        <script src="dist/js/jquery_1.js" type="text/javascript"></script>
+        <script src="dist/js/jquery.autocomplete.js" type="text/javascript"></script>
         <script src="dist/js/ApplicationValidate.js" type="text/javascript"></script>
         <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
-          <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <link href="dist/css/jquery.autocomplete_1.css" rel="stylesheet" type="text/css"/>
+
+        <script src="dist/js/datePicker/jquery-ui.js"></script>
+
+        <link href="dist/js/datePicker/jquery-ui.css" rel="stylesheet" type="text/css"/>
         <style>
             .right_text{
                 text-align: right;
             }
         </style>
         <script>
+            $.noConflict();
+            jQuery(document).ready(function () {
+                jQuery("#member_nic").autocomplete("getMemberNICBybranchAuto.php?branch_id=" + $("#branch_id").val(), {
+                    width: 329,
+                    matchContains: true,
+                    selectFirst: true
+                });
+                jQuery("#member_nic").result(function (event, data, formatted) {
+                    loadData(data)
+                   
+                });
+
+            });
+
             function readURL(input) {
                 if (input.files && input.files[0]) {
                     var reader = new FileReader();
@@ -48,15 +75,16 @@ $branch_id=$_SESSION["BRANCH_CODE"];
             ];
 
             $(document).on("ready", function () {
-                loadData();
+              //  loadData();
             });
             //var member_group;
-            var loadData = function () {
+            var loadData = function (data) {
+                
                 $.ajax({
                     type: 'POST',
-                    url: "getAllMemberAjaxForApplication.php?branch_id=<?php echo $branch_id?>"
+                    url: "getAllMemberAjaxForApplication.php?nic_number="+data
                 }).done(function (data) {
-                    //alert(data);
+                  alert(data);
                     var pro = JSON.parse(data);
                     for (var i in pro) {
                         member_id = pro[i].member_id;
@@ -64,7 +92,7 @@ $branch_id=$_SESSION["BRANCH_CODE"];
                         member_NIC = pro[i].member_NIC;
                         member_surNmae = pro[i].member_surNmae;
                         member_inital = pro[i].member_inital;
-                        member_group = pro[i].member_group;
+                        member_group = pro[i].group_id;
 
                         guranter_surName = pro[i].guranter_surName;
                         guranter_initial = pro[i].guranter_initial;
@@ -77,7 +105,23 @@ $branch_id=$_SESSION["BRANCH_CODE"];
 
                         Member.push({"label": member_NIC, "member_number": member_number, "member_surNmae": member_surNmae, "member_inital": member_inital, "member_group": member_group,
                             "guranter_surName": guranter_surName, "guranter_initial": guranter_initial, "guranter_contact": guranter_contact, "guranter_AddressLine1": guranter_AddressLine1, "guranter_AddressLine2": guranter_AddressLine2, "guranter_AddressLine3": guranter_AddressLine3, "guranter_AddressLine4": guranter_AddressLine4, "member_id": member_id});
+
+                        $("#member_name").val(member_inital + " " + member_surNmae);
+                        $("#guranter_name").val(guranter_surName + " " + guranter_initial);
+                        $("#guranter_contact").val(guranter_contact);
+                        $("#guranter_address").val(guranter_AddressLine1 + ",\n" + guranter_AddressLine2 + ",\n" + guranter_AddressLine3 + ",\n" + guranter_AddressLine4);
+
+                        $("#member_code").val(zeroPad(member_id, 10));
+                        $("#member_id").val(member_id);
+
+
+
+                        deleteRows();
+
                     }
+                    getGuranters(member_group);
+                    loanTerm(member_id);
+
                 });
             }
             $(document).ready(function () {
@@ -167,8 +211,8 @@ $branch_id=$_SESSION["BRANCH_CODE"];
                             el3.type = 'text';
                             el3.name = 'contactNum_' + i;
                             el3.id = 'contactNum_' + i;
-                            el3.size = 15;
-                            el3.maxlength = 15;
+                            el3.size = 12;
+                            el3.maxlength = 12;
                             el3.value = tpayment;
                             thirdCell.appendChild(el3);
 
@@ -177,8 +221,8 @@ $branch_id=$_SESSION["BRANCH_CODE"];
                             el4.type = 'text';
                             el4.name = 'memberID_' + i;
                             el4.id = 'memberID_' + i;
-                            el4.size = 8;
-                            el4.maxlength = 8;
+                            el4.size = 1;
+                            el4.maxlength = 1;
                             el4.value = memberid;
                             forthCell.appendChild(el4);
                             // alert(i);
@@ -225,7 +269,6 @@ $branch_id=$_SESSION["BRANCH_CODE"];
                     type: 'POST',
                     url: "getLoanTermAjax.php?member_id=" + id
                 }).done(function (data) {
-
                     var pro = JSON.parse(data);
                     for (var i in pro) {
                         num_comments = pro[i].num_comments;
@@ -243,10 +286,9 @@ $branch_id=$_SESSION["BRANCH_CODE"];
                 var result = "<?php echo $_SESSION['msgap'] ?>";
 
                 if (result == 1) {
-                   // $('.success').fadeIn(500).delay(1500).fadeOut(400);
-                     swal("Successfully Created!", "You clicked the button!", "success");
-                }
-                else if (result == 2) {
+                    // $('.success').fadeIn(500).delay(1500).fadeOut(400);
+                    swal("Successfully Created!", "You clicked the button!", "success");
+                } else if (result == 2) {
                     $('.failure').fadeIn(500).delay(1500).fadeOut(400);
                     $('.failure').html('Successfully deleted record');
                 } else if (result == 3) {
@@ -285,7 +327,7 @@ $branch_id=$_SESSION["BRANCH_CODE"];
                         <li class="active">Create application</li>
                     </ol>
                 </section>
-               
+
                 <div id="ss" class="alert-boxs  response-content " style="margin: 0px 15px 10px 15px"></div> 
                 <div class="alert alert-box success " style="margin: 0px 15px 10px 15px">Successfully added record</div>
                 <section class="content">
@@ -309,6 +351,7 @@ $branch_id=$_SESSION["BRANCH_CODE"];
                                                 <input type="text" class="form-control required" id="member_nic" name="member_nic" placeholder="NIC number" >
                                                 <input type="hidden" class="form-control" id="rowcountss" name="rowcountss">
                                                 <input type="hidden" class="form-control" id="member_id" name="member_id">
+                                                <input type="text" class="form-control" id="branch_id" value="<?php echo $_SESSION["BRANCH_ID"]; ?>" name="branch_id">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -440,7 +483,7 @@ $branch_id=$_SESSION["BRANCH_CODE"];
                                                 <td><input name="name_0" type="text" id="name_0" size="25" maxlength="25" /></td>
                                                 <td><input name="address_0" type="text" id="address_0" size="25" maxlength="25" /></td>
                                                 <td><input name="contactNum_0" type="text" id="contactNum_0" size="25" maxlength="15" /></td>
-                                                <td><input name="memberID_0" type="text" id="contactNum_0" size="25" maxlength="15" /></td>
+                                                <td><input name="memberID_0" type="text" id="contactNum_0" size="1" maxlength="1" /></td>
                                             </tr>
                                         </table>
 <!--                                        <input type="button" value="Add" onclick="addRow();" />
@@ -468,9 +511,9 @@ $branch_id=$_SESSION["BRANCH_CODE"];
             </div>
             <?php include 'includes/footer.php'; ?>
         </div>
-        <script src="dist/js/jQuery-2.1.4.min.js" type="text/javascript"></script>
-        <script src="bootstrap/js/bootstrap.min.js"></script>
-        <script src="dist/js/app.min.js"></script>
+        <!--<script src="dist/js/jQuery-2.1.4.min.js" type="text/javascript"></script>-->
+        <!--<script src="bootstrap/js/bootstrap.min.js"></script>-->
+
         <link href="dist/js/datePicker/jquery-ui.css" rel="stylesheet" type="text/css"/>
         <script src="dist/js/datePicker/jquery-ui.js"></script>
     </body>

@@ -21,7 +21,7 @@ class Guranter {
 
     function updateGuranter($guranter_nic, $guranter_surname, $guranter_initial, $guranter_fullInitial, $guranter_contact, $guranter_dob, $member_id, $guranter_id, $guranter_addressln1, $guranter_addressln2, $guranter_addressln3, $guranter_addressln4) {
         global $con;
-        $sql = "UPDATE guranter SET guranter_surName='$guranter_surname',guranter_initialInFulWithoutSurname='$guranter_fullInitial',guranter_initial='$guranter_initial',guranter_NIC='$guranter_nic',guranter_dateOfBirth='$guranter_dob',guranter_contact='$guranter_contact',member_id=$member_id,guranter_AddressLine1='$guranter_addressln1',guranter_AddressLine2='$guranter_addressln2',guranter_AddressLine3='$guranter_addressln3',guranter_AddressLine4='$guranter_addressln4' WHERE guranter_id=$guranter_id";
+       echo $sql = "UPDATE guranter SET guranter_surName='$guranter_surname',guranter_initialInFulWithoutSurname='$guranter_fullInitial',guranter_initial='$guranter_initial',guranter_NIC='$guranter_nic',guranter_dateOfBirth='$guranter_dob',guranter_contact='$guranter_contact',member_id=$member_id,guranter_AddressLine1='$guranter_addressln1',guranter_AddressLine2='$guranter_addressln2',guranter_AddressLine3='$guranter_addressln3',guranter_AddressLine4='$guranter_addressln4' WHERE guranter_id=$guranter_id";
         $Query = mysqli_query($con, $sql);
         if ($Query) {
             return $con->insert_id;

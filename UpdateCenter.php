@@ -122,7 +122,7 @@ $resultUser = $user->getUser();
                                         <div class="form-group">
                                             <label for="center_number" class="col-sm-4 control-label">Center Code</label>
                                             <div class="col-sm-4">
-                                                <input type="text" class="form-control" id="center_number" name="center_number" value="<?php echo $row['center_code']; ?>" placeholder="center code">
+                                                <input type="text" class="form-control" id="center_number" name="center_number" value="<?php echo $row['center_code']; ?>" placeholder="center code" readonly>
                                             </div>
                                         </div>
                                         <div class="form-group">

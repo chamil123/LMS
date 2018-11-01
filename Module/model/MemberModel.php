@@ -11,7 +11,7 @@ class Member {
         return $Query;
     }
 
-    function addMember($member_number, $member_nic, $member_surname, $member_initial, $member_fullInitial, $member_dob, $member_status, $member_gender, $member_nationality, $member_mobile, $member_homenumber, $centerid, $branch_code, $member_aline1, $member_aline2, $member_aline3, $member_aline4,$group_id) {
+    function addMember($member_number, $member_nic, $member_surname, $member_initial, $member_fullInitial, $member_dob, $member_status, $member_gender, $member_nationality, $member_mobile, $member_homenumber, $centerid, $branch_code, $member_aline1, $member_aline2, $member_aline3, $member_aline4, $group_id) {
         global $con;
         mysqli_autocommit($con, FALSE);
         $result = $con->query("SELECT member_id FROM member ORDER BY member_id  DESC LIMIT 1");
@@ -38,8 +38,8 @@ class Member {
 
     function updateMember($member_number, $member_nic, $member_surname, $member_initial, $member_fullInitial, $member_dob, $member_status, $member_gender, $member_nationality, $member_group, $member_mobile, $member_homenumber, $centerid, $member_id, $branch_code, $member_aline1, $member_aline2, $member_aline3, $member_aline4) {
         global $con;
-        $sql = "UPDATE member set member_number='$member_number',member_NIC='$member_nic',member_surNmae='$member_surname',member_inital='$member_initial',member_initialInFulWithoutSurname='$member_fullInitial',member_dateOfBirth='$member_dob',member_maritalStatus='$member_status',
-            member_gender='$member_gender',member_nationality='$member_nationality',member_group='$member_group',member_mobileNumber='$member_mobile',member_homeNumber='$member_homenumber',center_id=$centerid,member_branchNumber='$branch_code',member_AddressLine1 ='$member_aline1',member_AddressLine2 ='$member_aline2',member_AddressLine3='$member_aline3',member_AddressLine4='$member_aline4'  WHERE member_id=$member_id";
+        echo $sql = "UPDATE member set member_number='$member_number',member_NIC='$member_nic',member_surNmae='$member_surname',member_inital='$member_initial',member_initialInFulWithoutSurname='$member_fullInitial',member_dateOfBirth='$member_dob',member_maritalStatus='$member_status',
+            member_gender='$member_gender',member_nationality='$member_nationality',group_id='$member_group',member_mobileNumber='$member_mobile',member_homeNumber='$member_homenumber',center_id=$centerid,member_branchNumber='$branch_code',member_AddressLine1 ='$member_aline1',member_AddressLine2 ='$member_aline2',member_AddressLine3='$member_aline3',member_AddressLine4='$member_aline4'  WHERE member_id=$member_id";
         $Query = mysqli_query($con, $sql);
         if ($Query) {
             return 1;
@@ -175,7 +175,9 @@ class Member {
 
         $data = mysqli_fetch_array($Query);
         return $data[0];
-    } function getAllMemberGroupByCenter($branch_id,$center_id) {
+    }
+
+    function getAllMemberGroupByCenter($branch_id, $center_id) {
         global $con;
         $sql = "SELECT 
                     tg.group_number, tg.group_id
@@ -186,6 +188,21 @@ class Member {
                         AND tg.group_status = 0";
         $Query = mysqli_query($con, $sql);
         return $Query;
+    }
+
+    function autocomplete($data, $branch_id) {
+        global $con;
+        $sql = "SELECT 
+                    tm.member_NIC,tm.member_id,tc.center_id
+                FROM
+                    member tm
+                        INNER JOIN
+                    center tc ON tm.center_id = tc.center_id
+                WHERE
+                    tm.member_NIC LIKE '$data%'
+                        AND tc.branch_id = $branch_id";
+        $query = mysqli_query($con, $sql);
+        return $query;
     }
 
     function commit() {

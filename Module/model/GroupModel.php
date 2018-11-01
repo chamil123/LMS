@@ -26,6 +26,17 @@ class Group {
                     tmg.group_number = '$groupNo'";
         $Query = mysqli_query($con, $sql);
         return $Query;
+    }function viewAllBroupByCenter($center_id) {
+        global $con;
+        $sql = "SELECT 
+                        tmg.group_id, tmg.group_number
+                    FROM
+                        member_group tmg
+                    WHERE
+                        tmg.center_id = $center_id
+                            AND tmg.group_status = 0";
+        $Query = mysqli_query($con, $sql);
+        return $Query;
     }
 
     function commit() {

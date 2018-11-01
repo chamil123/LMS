@@ -38,6 +38,7 @@ if ($_SESSION["BRANCH_CODE"] != "") {
         <script src="dist/js/jquery.js" type="text/javascript"></script>
         <script src="bootstrap/js/bootstrap.min.js"></script>
         <script src="dist/js/app.min.js"></script>
+        
         <script src="dist/js/jquery_1.js" type="text/javascript"></script>
         <script src="dist/js/jquery.autocomplete.js" type="text/javascript"></script>
         <script src="dist/js/MemberValidate.js" type="text/javascript"></script>
@@ -70,7 +71,7 @@ if ($_SESSION["BRANCH_CODE"] != "") {
                     day = '0' + day.toString();
 
                 var maxDate = year - 18 + '-' + month + '-' + day;
-                var minDate = year - 60 + '-' + month + '-' + day;
+                var minDate = year - 64 + '-' + month + '-' + day;
                 $('#member_dob').attr('max', maxDate);
                 $('#member_dob').attr('min', minDate);
                 $('#guranter_dob').attr('max', maxDate);

@@ -84,7 +84,7 @@ header("Pragma: no-cache");
                             <svg class="login__icon pass svg-icon" viewBox="0 0 20 20">
                             <path d="M0,20 20,20 20,8 0,8z M10,13 10,16z M4,8 a6,8 0 0,1 12,0" />
                             </svg>
-                            <input type="password" class="login__input pass" name="Password" placeholder="Password" value="123"/>
+                            <input type="password" class="login__input pass" name="Password" placeholder="Password" value="123"  autocomplete="off"/>
                         </div>
                         <input type="submit" class=" btn btn-info login__submit" style="margin-top: 30px" >Sign in
                         <p class="login__signup" style="margin-top: -15px">Don't have an account? &nbsp;<a>Sign up</a></p>-->
